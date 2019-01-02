@@ -1,5 +1,5 @@
 """
-HyperSimple docstring2md - A routine to create a Markdown formatted
+Hyper Simple Docstring 2 Markdown - A routine to create a Markdown formatted
     file containing the documentation DOCSTRINGS of a target library.
 """
 import pydoc
