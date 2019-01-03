@@ -64,4 +64,4 @@ HyperSimpleDocstring2Md is used to generate the Tauren-MD's documentation, [take
 
 # LICENSE
 
-Enjoy!
+This software is licensed under the Unlicense as a demonstration of my gratitute for all those skills learned over the years by reading others free tutorials on Internet. Thanks to the community.
