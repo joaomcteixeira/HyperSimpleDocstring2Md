@@ -74,7 +74,7 @@ for path, dirs, files in os.walk(rootdir):
                 or file_ != "__init__.py" and file_.startswith("_"):
             continue
         
-        file_base_name = file_.split(".")[0]
+        file_base_name = file_
         
         module_path = os.path.abspath(os.path.join(path, file_))
         
@@ -84,7 +84,7 @@ for path, dirs, files in os.walk(rootdir):
             ).load_module()
         
         module_docstring = \
-            pydoc.plain(pydoc.render_doc(foo)).split("FUNCTIONS")[0]
+            pydoc.plain(pydoc.render_doc(foo)).split("FILE")[0]
         
         if file_ == "__init__.py":
             body_ += doc_string_.format(module_docstring)
@@ -101,6 +101,25 @@ for path, dirs, files in os.walk(rootdir):
                 file_base_name,
                 )
             body_ += doc_string_.format(module_docstring)
+        
+        class_list = inspect.getmembers(foo, inspect.isclass)
+        
+        if len(class_list) > 0:
+            
+            for class_name, class_ in class_list:
+                
+                class_doc = pydoc.plain(pydoc.render_doc(class_))
+                index_ += "{}- [class {}.()]({})\n".format(
+                    (len(folders) + 2) * spacer,
+                    class_name,
+                    base_link + class_name,
+                    )
+                body_ += "{} class {}.()\n\n".format(
+                    (len(folders) + 2) * "#",
+                    class_name,
+                    )
+                
+                body_ += doc_string_.format(class_doc)
         
         func_list = inspect.getmembers(foo, inspect.isfunction)
         
