@@ -12,7 +12,7 @@ Yet (in my oppinion), these projects fail to address a specific collective of de
 
 # Solution
 
-Because I failed to found a solution out there in the _wild_ Internet, I developed **Hyper Simple Docstring 2 Markdown** creator. This software intents to be exactly that, _hyper simple_.
+**Hyper Simple Docstring 2 Markdown** creator intents to be exactly that, _hyper simple_.
 
 It extracts DOCSTRINGs recursively from a given Python package using [pydoc](https://docs.python.org/3.7/library/pydoc.html) and the [inspect module](https://docs.python.org/3/library/inspect.html) and hierarchically organizes them in one indexed Mardown file.
 
