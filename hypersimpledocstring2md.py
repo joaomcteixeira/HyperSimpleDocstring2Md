@@ -102,12 +102,12 @@ for path, dirs, files in os.walk(rootdir):
         else:
             index_ += "{}- [{}]({})\n".format(
                 (len(folders) + 1) * spacer,
-                file_base_name,
-                base_link + file_base_name,
+                file_name,
+                base_link + file_name,
                 )
             body_ += "{} {}\n\n".format(
                 (len(folders) + 1) * "#",
-                file_base_name,
+                file_name,
                 )
             
             # writes the docstring from module
