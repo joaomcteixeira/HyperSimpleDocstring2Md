@@ -41,8 +41,6 @@ For example:
 
 ```
 $ python hypersimpledocstring2md.py -h
-
-python hypersimpledocstring2md.py -h
 usage: hypersimpledocstring2md.py [-h] [--baselink baselink] [--output OUTPUT]
                                   path
 
