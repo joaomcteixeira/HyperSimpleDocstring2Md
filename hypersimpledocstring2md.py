@@ -6,6 +6,7 @@ import pydoc
 import os
 import importlib.machinery
 import argparse
+import inspect
 
 ap = argparse.ArgumentParser(description=__doc__)
 
@@ -17,9 +18,10 @@ ap.add_argument(
     )
 
 ap.add_argument(
-    "baselink",
+    "--baselink",
     metavar="baselink",
     type=str,
+    default="",
     help=(
         "The base Web URL where the .md will be hosted to"
         "allow Index linking."
@@ -36,6 +38,7 @@ args = ap.parse_args()
 
 index_ = ""
 body_ = ""
+spacer = "  "
 doc_string_ = """
 ```
 {}
@@ -58,7 +61,7 @@ for path, dirs, files in os.walk(rootdir):
         continue
     
     index_ += "{}- [{}/]({})\n".format(
-        (len(folders) - 1) * "    ",
+        (len(folders) - 1) * spacer,
         folders[-1],
         base_link + folders[-1],
         )
@@ -80,14 +83,16 @@ for path, dirs, files in os.walk(rootdir):
             module_path,
             ).load_module()
         
-        docstring = pydoc.plain(pydoc.render_doc(foo)).split("FILE")[0]
+        module_docstring = \
+            pydoc.plain(pydoc.render_doc(foo)).split("FUNCTIONS")[0]
         
         if file_ == "__init__.py":
-            body_ += doc_string_.format(docstring)
+            body_ += doc_string_.format(module_docstring)
+            continue
         
         else:
             index_ += "{}- [{}]({})\n".format(
-                (len(folders) + 1) * "    ",
+                (len(folders) + 1) * spacer,
                 file_base_name,
                 base_link + file_base_name,
                 )
@@ -95,7 +100,27 @@ for path, dirs, files in os.walk(rootdir):
                 (len(folders) + 1) * "#",
                 file_base_name,
                 )
-            body_ += doc_string_.format(docstring)
+            body_ += doc_string_.format(module_docstring)
+        
+        func_list = inspect.getmembers(foo, inspect.isfunction)
+        
+        if len(func_list) > 0:
+            
+            for func_name, func in func_list:
+                
+                funcdoc = pydoc.plain(pydoc.render_doc(func))
+                index_ += "{}- [{}.()]({})\n".format(
+                    (len(folders) + 2) * spacer,
+                    func_name,
+                    base_link + func_name,
+                    )
+                body_ += "{} {}.()\n\n".format(
+                    (len(folders) + 2) * "#",
+                    func_name,
+                    )
+                
+                body_ += doc_string_.format(funcdoc)
+        
 
 with open(args.output, 'w') as docs_:
     docs_.write(index_)
