@@ -58,6 +58,10 @@ optional arguments:
 
 ```
 
+## examples
+
+HyperSimpleDocstring2Md is used to generate the Tauren-MD's documentation, [take a look](https://github.com/joaomcteixeira/Tauren-MD/wiki/Modules-Documentation). 
+
 # LICENSE
 
 Enjoy!
