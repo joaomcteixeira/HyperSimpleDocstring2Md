@@ -105,7 +105,7 @@ for path, dirs, files in os.walk(rootdir):
                 file_name,
                 base_link + file_name,
                 )
-            body_ += "{} {}\n\n".format(
+            body_ += "{} {}\n".format(
                 (len(folders) + 1) * "#",
                 file_name,
                 )
@@ -128,7 +128,7 @@ for path, dirs, files in os.walk(rootdir):
                     base_link + class_name,
                     )
                 
-                body_ += "{} class {}.()\n\n".format(
+                body_ += "{} class {}.()\n".format(
                     (len(folders) + 2) * "#",
                     class_name,
                     )
@@ -149,7 +149,7 @@ for path, dirs, files in os.walk(rootdir):
                     func_name,
                     base_link + func_name,
                     )
-                body_ += "{} func {}.()\n\n".format(
+                body_ += "{} func {}.()\n".format(
                     (len(folders) + 2) * "#",
                     func_name,
                     )
