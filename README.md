@@ -20,7 +20,7 @@ The output Mardown file can be directly used as a GitHub wiki page, for example.
 
 Only two arguments are required, it's HYPER SIMPLE:
 - the PATH to your Python package
-- a base web url to that the index can be linked to the Markdown headers, it will results in `<link>#<header>`
+- a base web url to that the index can be linked to the Markdown headers, it will result in `<link>#<header>`
 
 ```
 $ python hypersimpledocstring2md.py -h
