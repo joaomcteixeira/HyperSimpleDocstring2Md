@@ -44,8 +44,9 @@ $ python hypersimpledocstring2md.py -h
 usage: hypersimpledocstring2md.py [-h] [--baselink baselink] [--output OUTPUT]
                                   path
 
-Hyper Simple Docstring 2 Markdown - A routine to create a Markdown formatted
-file containing the documentation DOCSTRINGS of a target library.
+Hyper Simple Docstring 2 Markdown - A routine to create a single Markdown
+formatted file containing the documentation DOCSTRINGS of a target Python
+library.
 
 positional arguments:
   path                 PATH to Library.
@@ -53,9 +54,8 @@ positional arguments:
 optional arguments:
   -h, --help           show this help message and exit
   --baselink baselink  The base Web URL where the .md will be hosted toallow
-                       Index linking.
-  --output OUTPUT      The OUTPUT Markdown file.
-
+                       Index-Header linking. Defaults to no link.
+  --output OUTPUT      The OUTPUT Markdown file. Defaults to 'docs.md'.
 ```
 
 ## examples
