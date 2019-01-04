@@ -66,4 +66,4 @@ HyperSimpleDocstring2Md is used to generate the Tauren-MD's documentation, [take
 
 # LICENSE
 
-This software is licensed under the Unlicense as a demonstration of my gratitute for all those skills learned over the years by reading others free tutorials on Internet. Thanks to the community.
+This software is licensed under the [Unlicense](https://github.com/joaomcteixeira/HyperSimpleDocstring2Md/blob/master/LICENSE) as a demonstration of my gratitute to the whole Python community that cheerily and altruistically share knowledge on the Web. Thanks to the community.
