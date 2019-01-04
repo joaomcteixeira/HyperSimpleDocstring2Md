@@ -1,22 +1,24 @@
 # HyperSimpleDocstring2Md
 
-A Hyper Simple Docstring to Markdown. Creates hierarchically indexed [Markdown](https://en.wikipedia.org/wiki/Markdown) files from Python libraries [docstrings](https://www.python.org/dev/peps/pep-0257/).
+A Hyper Simple Docstring to Markdown. Creates hierarchically indexed [Markdown](https://en.wikipedia.org/wiki/Markdown) files from [Python](https://www.python.org/) libraries' [docstrings](https://www.python.org/dev/peps/pep-0257/).
 
 # Why?
 
-It is of extreme importance to maintain software documentation up to date with the latest releases.
+It is extremely important to maintain software documentation up to date with the latest releases.
 
-There are several packages out there to efficiently handle the documentation of Python projects, those can extract updated docstrings and setup a beautiful web pages accordingly. However, a considerable amount of time and effort is required to handle such powerful software tools and keep up to date with the most novel routines and styles.
+There are many packages out there to efficiently handle the documentation of Python projects, those can extract updated docstrings and setup beautiful web pages accordingly. But, such complex tools require a considerable amount of time and effort to master, and developers should thrive to keep up to date with the most novel routines and styles of documentation representation.
 
-Yet (in my oppinion), these projects fail to address a specific collective of developers: those that thrive, above all, for extreme simplicity, long-term stability and universality.
+Moreover, in my opinion, these projects fail to address a specific collective of developers: those who thrive, above all, for extreme simplicity, long-term stability and universality of their output, in this case software documentation.
 
 # Solution
 
-**Hyper Simple Docstring 2 Markdown** creator intents to be exactly that, _hyper simple_.
-
-It extracts DOCSTRINGs recursively from a given Python package using [pydoc](https://docs.python.org/3.7/library/pydoc.html) and the [inspect module](https://docs.python.org/3/library/inspect.html) and hierarchically organizes them in one indexed Mardown file.
+**Hyper Simple Docstring 2 Markdown** creator was designed to recursively extract DOCSTRINGS from a target Python package and write them to a simple yet organized and indexed Markdown formatted file. It intents to be exactly that, **hyper simple** in both input and output.
 
 The output Mardown file can be directly used as a GitHub wiki page, for example.
+
+## Implementation
+
+It uses Python +3.7 standard libraries, such as [pydoc](https://docs.python.org/3.7/library/pydoc.html) and the [inspect module](https://docs.python.org/3/library/inspect.html).
 
 ## Which docstrings are covered?
 
@@ -24,7 +26,7 @@ In the current version, DOCSTRINGS from packages (`__init__.py`), modules, class
 
 # How to use it
 
-Only one argument is required, **it's HYPER SIMPLE**:
+No installation is required and you only need to pass **one** argument, **it's HYPER SIMPLE**:
 - the PATH to your Python package
 
 ```
