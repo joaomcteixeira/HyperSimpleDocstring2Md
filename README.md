@@ -57,6 +57,8 @@ optional arguments:
   -h, --help           show this help message and exit
   --baselink baselink  The base Web URL where the .md will be hosted toallow
                        Index-Header linking. Defaults to no link.
+  --toplink toplink    Adds a quick link to the Index bellow each header.
+                       Defaults to True.
   --output OUTPUT      The OUTPUT Markdown file. Defaults to 'docs.md'.
 ```
 

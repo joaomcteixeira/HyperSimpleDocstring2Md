@@ -9,6 +9,13 @@ import importlib.machinery
 import pydoc
 import inspect
 
+
+def goto_link(base_link, destination):
+    
+    base_link = base_link.rstrip("#")
+    
+    return f"[Go to {destination}]({base_link}#{destination})  \n"
+
 ap = argparse.ArgumentParser(description=__doc__)
 
 ap.add_argument(
@@ -30,6 +37,17 @@ ap.add_argument(
     )
 
 ap.add_argument(
+    "--toplink",
+    metavar="toplink",
+    type=str,
+    default=True,
+    help=(
+        "Adds a quick link to the Index bellow each header."
+        " Defaults to True."
+        ),
+    )
+
+ap.add_argument(
     "--output",
     default="docs.md",
     help="The OUTPUT Markdown file. Defaults to 'docs.md'.",
@@ -37,7 +55,7 @@ ap.add_argument(
 
 args = ap.parse_args()
 
-index_ = ""
+index_ = "# Index\n"
 body_ = ""
 spacer = "  "
 doc_string_fmt = """
@@ -95,6 +113,10 @@ for path, dirs, files in os.walk(rootdir):
             pydoc.plain(pydoc.render_doc(foo)).split("FILE")[0]
         
         if file_name == "__init__.py":
+            
+            if args.toplink:
+                body_ += goto_link(base_link, "Index")
+            
             body_ += doc_string_fmt.format(module_docstring)
             continue
         
@@ -103,12 +125,17 @@ for path, dirs, files in os.walk(rootdir):
             index_ += "{}- [{}]({})\n".format(
                 (len(folders) + 1) * spacer,
                 file_name,
-                base_link + file_name,
+                base_link + file_name.translate(
+                    str.maketrans(dict.fromkeys("."))
+                    ),
                 )
             body_ += "{} {}\n".format(
                 (len(folders) + 1) * "#",
                 file_name,
                 )
+            
+            if args.toplink:
+                body_ += goto_link(base_link, "Index")
             
             # writes the docstring from module
             body_ += doc_string_fmt.format(module_docstring)
@@ -122,16 +149,19 @@ for path, dirs, files in os.walk(rootdir):
                 
                 class_doc = pydoc.plain(pydoc.render_doc(class_))
                 
-                index_ += "{}- [class {}.()]({})\n".format(
+                index_ += "{}- [class... {}.()]({})\n".format(
                     (len(folders) + 2) * spacer,
                     class_name,
                     base_link + class_name,
                     )
                 
-                body_ += "{} class {}.()\n".format(
+                body_ += "{} {}.()\n".format(
                     (len(folders) + 2) * "#",
                     class_name,
                     )
+                
+                if args.toplink:
+                    body_ += goto_link(base_link, "Index")
                 
                 body_ += doc_string_fmt.format(class_doc)
         
@@ -144,15 +174,18 @@ for path, dirs, files in os.walk(rootdir):
                 
                 funcdoc = pydoc.plain(pydoc.render_doc(func))
                 
-                index_ += "{}- [func {}.()]({})\n".format(
+                index_ += "{}- [func... {}.()]({})\n".format(
                     (len(folders) + 2) * spacer,
                     func_name,
                     base_link + func_name,
                     )
-                body_ += "{} func {}.()\n".format(
+                body_ += "{} {}.()\n".format(
                     (len(folders) + 2) * "#",
                     func_name,
                     )
+                
+                if args.toplink:
+                    body_ += goto_link(base_link, "Index")
                 
                 body_ += doc_string_fmt.format(funcdoc)
         
