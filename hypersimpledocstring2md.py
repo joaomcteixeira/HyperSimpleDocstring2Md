@@ -1,43 +1,14 @@
 """
-Hyper Simple Docstring 2 Markdown - A routine to create a single 
-    Markdown formatted file containing the documentation DOCSTRINGS
-    of a target Python library.
+docstring goes here
 """
 import os
+import sys
 import argparse
 import importlib.machinery
-import pydoc
 import inspect
+import pydoc
 from pathlib import Path
 
-
-def goto_link(destination, base_link=""):
-
-    return f"[Go to {destination}]({base_link.rstrip('#')}#{destination})  \n"
-
-
-def check_thereis_func(func_list):
-    return len(func_list) > 0
-
-def add_index_entry(path_, descriptor, spacer="  "):
-    
-    input(type(path_))
-    
-    
-    index = (
-        f"{(len(path_.parents) + 1) * spacer}- "
-        f"[{descriptor}... {path_.stem}.()]"
-        f"({base_link + path_.stem})\n"
-        )
-    
-    return index
-
-def add_body_header(path_):
-    return f"{(len(path_.parents) + 1) * '#'} {path_.stem}.()\n"
-
-def add_body_docstring(docstring):
-    
-    return doc_string_fmt.format(docstring)
 
 def get_args():
     ap = argparse.ArgumentParser(description=__doc__)
@@ -80,95 +51,6 @@ def get_args():
     return ap.parse_args()
 
 
-
-# for path, dirs, files in os.walk(rootdir):
-    
-    # if path.endswith(folders_to_ignore):
-        # continue
-    
-    # folders = path[start:].split(os.sep)
-    
-    # # ignores sunders and dunders
-    # if folders[-1].startswith("_"):
-        # continue
-    
-    # # creates an Index entry for the package (folder)
-    # index_ += "{}- [{}/]({})\n".format(
-        # (len(folders) - 1) * spacer,
-        # folders[-1],
-        # base_link + folders[-1],
-        # )
-    
-    # # creates an header for the package (folder)
-    # # the package DOCSTRING from __init__.py will be written
-    # # under this header
-    # body_ += "{} {}/\n".format(len(folders) * "#", folders[-1])
-    
-    # for file_name in sorted(files):
-        
-        # if not file_name.endswith(".py") \
-                # or file_name.startswith("_") and file_name != "__init__.py":
-            # continue
-        
-        # module_path = os.path.abspath(os.path.join(path, file_name))
-        
-        # foo = importlib.machinery.SourceFileLoader(
-            # file_name,
-            # module_path,
-            # ).load_module()
-        
-        # module_docstring = \
-            # pydoc.plain(pydoc.render_doc(foo)).split("FILE")[0]
-        
-        
-        
-        # if file_name == "__init__.py":
-            
-            # if args.toplink:
-                # body_ += goto_link(base_link, "Index")
-            
-            # body_ += doc_string_fmt.format(module_docstring)
-            # continue
-        
-        # # creates module subindex and subheader
-        # else:
-            # index_ += "{}- [{}]({})\n".format(
-                # (len(folders) + 1) * spacer,
-                # file_name,
-                # base_link + file_name.translate(
-                    # str.maketrans(dict.fromkeys("."))
-                    # ),
-                # )
-            # body_ += "{} {}\n".format(
-                # (len(folders) + 1) * "#",
-                # file_name,
-                # )
-            
-            # if args.toplink:
-                # body_ += goto_link(base_link, "Index")
-            
-            # # writes the docstring from module
-            # body_ += doc_string_fmt.format(module_docstring)
-        
-        # # inspects if are classes defined in module
-        # class_list = inspect.getmembers(foo, inspect.isclass)
-        
-        # if len(class_list) > 0:
-            
-            # [add_DOC(class_name, class_, "class") for class_name, class_ in class_list]
-        
-        # # inspects if are functions defined in module
-        # func_list = inspect.getmembers(foo, inspect.isfunction)
-        
-        # if len(func_list) > 0:
-            
-            # [add_DOC(func_name, func, "func") for func_name, func in func_list]
-        
-
-# with open(args.output, 'w') as docs_:
-    # docs_.write(index_)
-    # docs_.write(body_)
-
 def valid_folder(path_):
     """
     Returns True if path_.match any of the conditions. False otherwise.
@@ -186,6 +68,7 @@ def valid_folder(path_):
     
     return not(any(p.match(condition) for condition in conditions))
 
+
 def valid_file(file_name):
     """
     Returns True if file_name matches the condition assigned.
@@ -199,84 +82,181 @@ def valid_file(file_name):
     
     return condition
 
-def get_docstring(path_, base_link=""):
+
+def load_module(path_):
     """
-    Returns: (Index, Body)
+    Loads module from Path object.
+    
+    Returns the module
     """
-    input(type(path_))
-    file_name = path_.name
+    module = importlib.machinery.SourceFileLoader(
+        path_.stem,
+        os.fspath(path_.resolve())
+        )
     
-    index_ = add_index_entry(path_, "module")
-    body_ = add_body_header(path_)
-    body_ += goto_link("Index", base_link=base_link) if args.toplink else ""
-    body_ += add_body_docstring(return_module_docstring(path_))
-    
-    class_list = inspect.getmembers(foo, inspect.isclass)
-    
-    return (index_, body_)
+    return module.load_module()
 
 
-def build_documentation(path_):
+def goto_link(base_link, where):
     
-    input(path_)
-    
-    return get_docstring(path_) 
+    return f"[Go to {where}]({base_link.rstrip('#')}#{where})\n"
 
 
-def return_module_docstring(path_):
-    module = importlib.machinery.SourceFileLoader("module", os.fspath(path_.resolve())).load_module()
-    return pydoc.plain(pydoc.render_doc(module)).split("FILE")[0]
+def add_index(title, descriptor="", base_link="", spacer=0):
+    
+    to_strip = ('()')
+    to_translate = str.maketrans(dict.fromkeys("."))
+    
+    index = (
+        f"{spacer * '  '}- "
+        f"[{descriptor}... {title}]"
+        f"({base_link + title.rstrip(to_strip).translate(to_translate)})\n"
+        )
+    
+    return index
+
+
+def add_header(title, spacer=1):
+    """
+    Adds Markdown header based on module_path (pathlib.Path object).
+    Defines subheaders based on Path.parents
+    
+    Path("package/subpackage/module.py")
+    
+    ## module.py
+    
+    """
+    
+    return f"{spacer * '#'} {title}\n"
+
+
+def read_docstring(object_):
+    """
+    Returns object docstring without the FILE information.
+    """
+    
+    fmt = "```\n{}\n```\n"
+    
+    docs = pydoc.plain(pydoc.render_doc(object_)).split("FILE")[0].rstrip()
+    
+    return fmt.format(docs)
+
+
+def gen_index_doc(
+        title,
+        object_,
+        spacer=1,
+        base_link="",
+        descriptor="",
+        toplink=False,
+        ):
+    
+    index = add_index(
+        title,
+        spacer=spacer,
+        base_link=base_link,
+        descriptor=descriptor,
+        )
+    
+    doc = add_header(
+        title,
+        spacer=spacer + 1,
+        )
+    
+    doc += goto_link(base_link, "Index") if toplink else ""
+    
+    doc += read_docstring(object_)
+    
+    return index, doc
+
+
+def get_index_doc(preds, base_link="", toplink=False):
+    
+    list_of_index_doc_tuples = [
+        gen_index_doc(
+            p[0] + "()",
+            p[1],
+            spacer=spcr,
+            base_link=base_link,
+            descriptor=dscrptr,
+            toplink=toplink,
+            )
+        for dscrptr, spcr, pred in preds
+        for p in pred if not(p[0].startswith("_"))
+        ] + [("", "")]
+    return list_of_index_doc_tuples
+
+
+def get_documentation(
+        module_abs_path,
+        spacer=1,
+        base_link="",
+        toplink=True,
+        ):
+    
+    module = load_module(module_abs_path)
+    
+    if module_abs_path.name == "__init__.py":
+        title = module_abs_path.parent.name
+        descriptor = "package"
+    
+    else:
+        title = module_abs_path.name
+        descriptor = "module"
+        spacer += 1
+    
+    index, documentation = gen_index_doc(
+        title,
+        module,
+        spacer=spacer - 1,
+        base_link=base_link,
+        descriptor=descriptor,
+        toplink=toplink,
+        )
+    
+    predictors = [
+        ("class", spacer, inspect.getmembers(module, inspect.isclass)),
+        ("func", spacer, inspect.getmembers(module, inspect.isfunction)),
+        ]
+    
+    are_pred = list(filter(lambda x: bool(x[-1]), predictors))
+    
+    index_, doc_ = list(zip(
+        *get_index_doc(are_pred, base_link=base_link, toplink=toplink)
+        )) if any(are_pred) else ([""], [""])
+    
+    index += "".join(index_)
+    documentation += "".join(doc_)
+    
+    return index, documentation
+
 
 if __name__ == "__main__":
     
     args = get_args()
     
-    index_ = "# Index\n"
-    body_ = ""
-    spacer = "  "
-    doc_string_fmt = """
-```
-{}
-```
-"""
-
     base_link = args.baselink + "#"
-    rootdir = args.path.rstrip(os.sep)
-    start = rootdir.rfind(os.sep) + 1
+    toplink = args.toplink
+    rootdir = Path(args.path).resolve()
+    rootlib = rootdir.name
     
-    results = [
-        build_documentation(Path(folder).joinpath(file_))
-            for folder, _, files in os.walk(rootdir) if valid_folder(folder)
-            for file_ in sorted(files) if valid_file(file_)
+    sys.path.append(os.fspath(rootdir.parent))
+    
+    lib_docs = [
+        get_documentation(
+            Path(folder).joinpath(file_),
+            spacer=len(Path(folder[folder.find(rootlib):]).parents),
+            base_link=base_link,
+            toplink=toplink,
+            )
+        for folder, _, files in os.walk(rootdir) if valid_folder(folder)
+        for file_ in sorted(files) if valid_file(file_)
         ]
     
-    print(results)
-    
-    # for path, dirs, files in os.walk(rootdir):
+    index, docs = list(zip(*lib_docs))
         
-        # if path.endswith(folders_to_ignore):
-            # continue
+    with open(args.output, 'w') as output:
+        output.write("".join(index))
+        output.write("".join(docs))
     
-        # folders = path[start:].split(os.sep)
-        
-        # # ignores sunders and dunders
-        # if folders[-1].startswith("_"):
-            # continue
-        
-        # for file_ in sorted(files):
-            
-            # if valid_file(file_):
-                
-                # index, body = get_docstring(
-                    # os.path.abspath(os.path.join(path, file_name)),
-                    # base_link=base_link
-                    # )
-                # index_ += index
-                # body_ += body
-        
-    
-        #[get_docstring(file_, base_link=base_link) for file_ in sorted(files) if valid_file(file_)]
-    
-    # with open(args.output, 'w') as docs_:
-        # docs_.write(index_)
-        # docs_.write(body_)
+    print(f"* Saved: {args.output}")
