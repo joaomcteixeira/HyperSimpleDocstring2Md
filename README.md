@@ -33,7 +33,7 @@ No installation is required and you only need to pass **one** argument, **it's H
 python hypersimpledocstring2md.py <PATH TO YOUR LIBRARY>
 ```
 
-This will recursively read your library and generate a `docs.md` file containing all referred docstrings in an organized manner.
+This will recursively read your library and generate a `docs.md` file containing all referred docstrings in an organized manner. All subpackages MUST have an `__init__.py` file.
 
 ## but there are also additional features
 
