@@ -1,5 +1,7 @@
 """
-docstring goes here
+Hyper Simple Docstring 2 Markdown - A routine to create a single 
+    Markdown formatted file containing the documentation DOCSTRINGS
+    of a target Python library. Fully based on Python standard library.
 """
 import os
 import sys
