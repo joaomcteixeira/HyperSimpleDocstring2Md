@@ -4,10 +4,17 @@ docstring goes here
 import os
 import sys
 import argparse
+import itertools as it
 import importlib.machinery
 import inspect
 import pydoc
 from pathlib import Path
+
+_descriptors = [
+    "class",
+    "method",
+    "function",
+    ]
 
 
 def get_args():
@@ -77,7 +84,7 @@ def valid_file(file_name):
     
     condition = (
         file_name.endswith(".py")
-        or not(file_name.startswith("_") and file_name != "__init__.py")
+        and not(file_name.startswith("_")) or file_name == "__init__.py"
         )
     
     return condition
@@ -169,22 +176,46 @@ def gen_index_doc(
     
     return index, doc
 
-
-def get_index_doc(preds, base_link="", toplink=False):
     
-    list_of_index_doc_tuples = [
-        gen_index_doc(
-            p[0] + "()",
-            p[1],
-            spacer=spcr,
-            base_link=base_link,
-            descriptor=dscrptr,
-            toplink=toplink,
-            )
-        for dscrptr, spcr, pred in preds
-        for p in pred if not(p[0].startswith("_"))
-        ] + [("", "")]
-    return list_of_index_doc_tuples
+def gen(name_, object_, doc_list, spacer=1, **kwargs):
+    """
+    Recursive function.
+    """
+    
+    # 6 is the Markdown subheader limit
+    # 5 and not 6 because of spacer + 1 in gen_index_doc
+    spacer += (1 if spacer < 5 else 0)
+    
+    doc_list.append(gen_index_doc(name_, object_, spacer=spacer, **kwargs))
+    
+    _ = list(
+        filter(
+            lambda x: not(x[0].startswith("_")),
+            inspect.getmembers(object_)
+            ),
+        ) or [("1", "2")]
+    
+    for name_, obj_ in _:
+        
+        whatis = [
+            inspect.isclass(obj_),
+            inspect.ismethod(obj_),
+            inspect.isfunction(obj_),
+            ]
+        
+        if any(whatis):
+            gen(
+                name_,
+                obj_,
+                doc_list,
+                spacer=spacer,
+                **{
+                    **kwargs,
+                    "descriptor": list(it.compress(_descriptors, whatis))[0],
+                    },
+                )
+    else:
+        return doc_list
 
 
 def get_documentation(
@@ -192,6 +223,8 @@ def get_documentation(
         spacer=1,
         base_link="",
         toplink=True,
+        index="",
+        documentation="",
         ):
     
     module = load_module(module_abs_path)
@@ -199,31 +232,26 @@ def get_documentation(
     if module_abs_path.name == "__init__.py":
         title = module_abs_path.parent.name
         descriptor = "package"
+        spacer = spacer - 1
     
     else:
         title = module_abs_path.name
         descriptor = "module"
-        spacer += 1
+        spacer = spacer
     
-    index, documentation = gen_index_doc(
-        title,
-        module,
-        spacer=spacer - 1,
-        base_link=base_link,
-        descriptor=descriptor,
-        toplink=toplink,
+    index_, doc_ = list(
+        zip(
+            *gen(
+                title,
+                module,
+                [],
+                spacer=spacer,
+                base_link=base_link,
+                toplink=toplink,
+                descriptor=descriptor,
+                )
+            )
         )
-    
-    predictors = [
-        ("class", spacer, inspect.getmembers(module, inspect.isclass)),
-        ("func", spacer, inspect.getmembers(module, inspect.isfunction)),
-        ]
-    
-    are_pred = list(filter(lambda x: bool(x[-1]), predictors))
-    
-    index_, doc_ = list(zip(
-        *get_index_doc(are_pred, base_link=base_link, toplink=toplink)
-        )) if any(are_pred) else ([""], [""])
     
     index += "".join(index_)
     documentation += "".join(doc_)
@@ -245,7 +273,7 @@ if __name__ == "__main__":
     lib_docs = [
         get_documentation(
             Path(folder).joinpath(file_),
-            spacer=len(Path(folder[folder.find(rootlib):]).parents),
+            spacer=len(Path(folder[folder.find(rootlib):]).parents) - 1,
             base_link=base_link,
             toplink=toplink,
             )
