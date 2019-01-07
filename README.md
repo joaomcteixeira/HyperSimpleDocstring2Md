@@ -1,6 +1,6 @@
 # HyperSimpleDocstring2Md
 
-A Hyper Simple Docstring to Markdown. Creates hierarchically indexed [Markdown](https://en.wikipedia.org/wiki/Markdown) files from [Python](https://www.python.org/) libraries' [docstrings](https://www.python.org/dev/peps/pep-0257/).
+A Hyper Simple Docstring to Markdown creator. Creates hierarchically indexed [Markdown](https://en.wikipedia.org/wiki/Markdown) files from [Python](https://www.python.org/) libraries' [docstrings](https://www.python.org/dev/peps/pep-0257/). Fully based on Python standard library.
 
 # Why?
 
