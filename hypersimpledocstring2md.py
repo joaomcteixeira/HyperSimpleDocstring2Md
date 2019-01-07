@@ -282,9 +282,9 @@ if __name__ == "__main__":
         ]
     
     index, docs = list(zip(*lib_docs))
-        
+    
     with open(args.output, 'w') as output:
-        output.write("".join(index))
+        output.write("# Index\n" + "".join(index))
         output.write("".join(docs))
     
     print(f"* Saved: {args.output}")
