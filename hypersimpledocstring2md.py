@@ -1,5 +1,5 @@
 """
-Hyper Simple Docstring 2 Markdown - A routine to create a single 
+Hyper Simple Docstring 2 Markdown - A routine to create a single
     Markdown formatted file containing the documentation DOCSTRINGS
     of a target Python library. Fully based on Python standard library.
 """
@@ -167,6 +167,11 @@ def gen_index_doc(
         descriptor=descriptor,
         )
     
+    # 6 is the Markdown subheader limit
+    # 5 and not 6 because of spacer + 1 in gen_index_doc
+    if spacer >= 5:
+        spacer = 5
+    
     doc = add_header(
         title,
         spacer=spacer + 1,
@@ -184,9 +189,7 @@ def gen(name_, object_, doc_list, spacer=1, **kwargs):
     Recursive function.
     """
     
-    # 6 is the Markdown subheader limit
-    # 5 and not 6 because of spacer + 1 in gen_index_doc
-    spacer += (1 if spacer < 5 else 0)
+    spacer += 1
     
     doc_list.append(gen_index_doc(name_, object_, spacer=spacer, **kwargs))
     
